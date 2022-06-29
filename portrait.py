@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.graph_objs as go
+import pandas as pd
 
 animals = ['giraffes', 'orangutans', 'monkeys']
 populations = [20, 14, 23]
