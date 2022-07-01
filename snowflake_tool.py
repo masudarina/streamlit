@@ -2,11 +2,11 @@ import snowflake.connector
 import pandas as pd
 
 # set variables
-sf_user = "<Snowflakeユーザー名>"
-sf_password = "<Snowflakeパスワード>"
-sf_account = "<Snowflakeアカウント>"
-sf_role = "<使用するロール名>"
-sf_warehouse = "<使用するウェアハウス名>"
+sf_user = "masudar"
+sf_password = "Taylor1213"
+sf_account = "qp20383.ap-northeast-1.aws"
+sf_role = "accountadmin"
+sf_warehouse = "COMPUTE_WH"
 
 # set Snowflake Connector
 ctx = snowflake.connector.connect(
