@@ -1,25 +1,36 @@
-#import os
-from snowflake.snowpark import Session
+import snowflake.connector
+import pandas as pd
 
-connection_parameters = {
-"account":"nttdataaiottdp-snowpark",
-"user":"masudar",
-"password":"Taylor1213",
-"role":"SYSADMIN",
-"warehouse":"PARK_WH",
-"database":"MASUDATEST",
-"schema":"PUBLIC"
-}
+# set variables
+sf_user = "<Snowflakeユーザー名>"
+sf_password = "<Snowflakeパスワード>"
+sf_account = "<Snowflakeアカウント>"
+sf_role = "<使用するロール名>"
+sf_warehouse = "<使用するウェアハウス名>"
 
-session = Session.builder.configs(connection_parameters).create()
+# set Snowflake Connector
+ctx = snowflake.connector.connect(
+user=sf_user,
+password=sf_password,
+account=sf_account
+)
 
+cs = ctx.cursor()
 
-print('[START] Checking All Warehouses...')
+# set role
+cs.execute("use role " + sf_role)
+# set warehouse
+cs.execute("use warehouse " + sf_warehouse)
 
-session.sql("show warehouses").collect()
-result = session.sql('''SELECT "name"  AS WAREHOUSE_NAME ,"size" AS WAREHOUSE_SIZE,"auto_suspend" AS AUTO_SUSPEND_TIME FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) order by "size"''').collect()
-python_df = session.create_dataframe(result)
-pandas_df = python_df.to_pandas()
-pandas_df.index = pandas_df.index + 1
-print('[CHART] All Warehouses')
-pandas_df
+cs.execute("show warehouses")
+result = cs.execute('''SELECT "name", "size", "auto_suspend" FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) order by "size"''').fetchall()
+columns1 = ['WAREHOUSE_NAME', 'WAREHOUSE_SIZE', 'AUTO_SUSPEND']
+if not result:
+    print("[INFO] Check Successed")
+    print("[INFO] No Warehouses for the condition")
+else:
+    print("[INFO] Check Successed")
+    df1 = pd.DataFrame(data=result, columns=columns1) 
+    df1.index = df1.index + 1
+    print('[CHART] Information of all Warehouses order by size')
+    display(df1)
