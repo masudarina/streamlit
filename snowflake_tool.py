@@ -1,5 +1,6 @@
 import snowflake.connector
 import pandas as pd
+import streamlit as st
 
 # set variables
 sf_user = "masudar"
@@ -33,4 +34,4 @@ else:
     df1 = pd.DataFrame(data=result, columns=columns1) 
     df1.index = df1.index + 1
     print('[CHART] Information of all Warehouses order by size')
-    display(df1)
+    st.table(df1)
